@@ -1,3 +1,5 @@
+"use client";
+
 import { ICategory } from "@/types";
 import CreateCategoryModel from "./createCategoryModel";
 import { NMTable } from "@/components/ui/core/NMTable";
