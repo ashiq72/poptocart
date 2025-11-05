@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import NMImageUploader from "@/components/ui/core/NMImageUploader";
+import ImagePreviewer from "@/components/ui/core/NMImageUploader/ImagesPreviewer";
 import {
   Dialog,
   DialogContent,
@@ -18,12 +19,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { createCategory } from "@/services/Category";
 import { useState } from "react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const CreateCategoryModal = () => {
-  const [imageFiles, setImageFiles] = useState<File[] | []>([]);
+  const [imagesFiles, setImagesFiles] = useState<File[] | []>([]);
   const [imagePreview, setImagePreview] = useState<string[] | []>([]);
 
   const form = useForm();
@@ -35,16 +37,14 @@ const CreateCategoryModal = () => {
     try {
       const formData = new FormData();
       formData.append("data", JSON.stringify(data));
-      formData.append("icon", imageFiles[0] as File);
-
-      //   const res = await createCategory(formData);
-      //   console.log(res);
-
-      //   if (res?.success) {
-      //     toast.success(res?.message);
-      //   } else {
-      //     toast.error(res?.message);
-      //   }
+      formData.append("icon", imagesFiles[0] as File);
+      const res = await createCategory(formData);
+      console.log(res);
+      if (res?.success) {
+        toast.success(res?.message);
+      } else {
+        toast.error(res?.message);
+      }
     } catch (err: any) {
       console.error(err);
     }
@@ -93,25 +93,25 @@ const CreateCategoryModal = () => {
                   </FormItem>
                 )}
               />
-
-              {/* {imagePreview.length > 0 ? (
-                <ImagePreviewer
-                  setImageFiles={setImageFiles}
-                  imagePreview={imagePreview}
-                  setImagePreview={setImagePreview}
-                  className="mt-8"
-                />
-              ) : (
-                <div className="mt-8">
-                  <NMImageUploader
-                    setImageFiles={setImageFiles}
+              <div className="">
+                {imagePreview.length > 0 ? (
+                  <ImagePreviewer
+                    setImagesFiles={setImagesFiles}
+                    imagePreview={imagePreview}
                     setImagePreview={setImagePreview}
-                    label="Upload Icon"
+                    className="mt-8"
                   />
-                </div>
-              )} */}
+                ) : (
+                  <div className="mt-8">
+                    <NMImageUploader
+                      setImagesFiles={setImagesFiles}
+                      setImagePreview={setImagePreview}
+                      label="Upload Icon"
+                    />
+                  </div>
+                )}
+              </div>
             </div>
-
             <Button type="submit" className="mt-5 w-full">
               {isSubmitting ? "Creating...." : "Create"}
             </Button>
