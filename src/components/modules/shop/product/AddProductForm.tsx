@@ -35,6 +35,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { IBrand } from "@/types/brand";
 import ImagePreviewer from "@/components/ui/core/NMImageUploader/ImagesPreviewer";
+import { addProduct } from "@/services/Product";
 
 export default function AddProductsForm() {
   const [imageFiles, setImageFiles] = useState<File[] | []>([]);
@@ -139,18 +140,18 @@ export default function AddProductsForm() {
     for (const file of imageFiles) {
       formData.append("images", file);
     }
-    // try {
-    //   const res = await addProduct(formData);
+    try {
+      const res = await addProduct(formData);
 
-    //   if (res.success) {
-    //     toast.success(res.message);
-    //     router.push("/user/shop/products");
-    //   } else {
-    //     toast.error(res.message);
-    //   }
-    // } catch (err: any) {
-    //   console.error(err);
-    // }
+      if (res.success) {
+        toast.success(res.message);
+        router.push("/user/shop/products");
+      } else {
+        toast.error(res.message);
+      }
+    } catch (err: any) {
+      console.error(err);
+    }
   };
 
   return (
