@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import ProductCard from "@/components/ui/core/ProductCard";
 
 import { getAllProducts } from "@/services/Product";
 import { IProduct } from "@/types";
