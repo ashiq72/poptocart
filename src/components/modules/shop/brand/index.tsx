@@ -1,24 +1,22 @@
 "use client";
-
-import { ICategory } from "@/types";
-import CreateCategoryModal from "./createCategoryModal";
-import { NMTable } from "@/components/ui/core/NMTable";
+import { NMTable } from "@/components/ui/core/NMTable/index";
 import { ColumnDef } from "@tanstack/react-table";
 import { Trash } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import { deleteCategory } from "@/services/Category";
 import { toast } from "sonner";
 import DeleteConfirmationModal from "@/components/ui/core/NMModal/DeleteConfirmationModal";
-type TCategoriesProps = {
-  categories: ICategory[];
-};
-const ManageCategories = ({ categories }: TCategoriesProps) => {
+import { IBrand } from "@/types/brand";
+import { deleteBrand } from "@/services/Brand";
+import CreateBrandModal from "./CreateBrandModal";
+
+const ManageBrands = ({ brands }: { brands: IBrand[] }) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
-  const handleDelete = (data: ICategory) => {
+  const handleDelete = (data: IBrand) => {
+    console.log(data);
     setSelectedId(data?._id);
     setSelectedItem(data?.name);
     setModalOpen(true);
@@ -27,7 +25,7 @@ const ManageCategories = ({ categories }: TCategoriesProps) => {
   const handleDeleteConfirm = async () => {
     try {
       if (selectedId) {
-        const res = await deleteCategory(selectedId);
+        const res = await deleteBrand(selectedId);
         console.log(res);
         if (res.success) {
           toast.success(res.message);
@@ -41,14 +39,14 @@ const ManageCategories = ({ categories }: TCategoriesProps) => {
     }
   };
 
-  const columns: ColumnDef<ICategory>[] = [
+  const columns: ColumnDef<IBrand>[] = [
     {
       accessorKey: "name",
-      header: () => <div>Category Name</div>,
+      header: () => <div>Brand Name</div>,
       cell: ({ row }) => (
         <div className="flex items-center space-x-3">
           <Image
-            src={row.original.icon}
+            src={row.original.logo}
             alt={row.original.name}
             width={40}
             height={40}
@@ -89,13 +87,15 @@ const ManageCategories = ({ categories }: TCategoriesProps) => {
       ),
     },
   ];
+
   return (
     <div>
-      <div className="flex justify-between">
-        <h2>Manage Category </h2>
-        <CreateCategoryModal />
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-bold">Manage Brands</h1>
+
+        <CreateBrandModal />
       </div>
-      <NMTable data={categories} columns={columns} />
+      <NMTable columns={columns} data={brands || []} />
 
       <DeleteConfirmationModal
         name={selectedItem}
@@ -107,4 +107,4 @@ const ManageCategories = ({ categories }: TCategoriesProps) => {
   );
 };
 
-export default ManageCategories;
+export default ManageBrands;
